@@ -1,0 +1,43 @@
+/* 
+  Localizable.strings
+  MovieAppUIKit
+
+  Created by Полина Толстенкова on 27.02.2023.
+  
+*/
+
+// MARK: MoviesView
+
+"back_button" = "Back";
+"details_title" = "Details";
+"alert_ok_button" = "OK";
+
+// MARK: MovieCell
+
+"movie_cell_identifier" = "MovieCell";
+
+// MARK: Errors
+
+"coder_error" = "init(coder:) has not been implemented";
+
+// MARK: Genres
+
+"movie_genre_action" = "Action";
+"movie_genre_adventure" = "Adventure";
+"movie_genre_animation" = "Animation";
+"movie_genre_comedy" = "Comedy";
+"movie_genre_crime" = "Crime";
+"movie_genre_documentary" = "Documentary";
+"movie_genre_drama" = "Drama";
+"movie_genre_family" = "Family";
+"movie_genre_fantasy" = "Fantasy";
+"movie_genre_history" = "History";
+"movie_genre_music" = "Music";
+"movie_genre_horror" = "Horror";
+"movie_genre_mystery" = "Mystery";
+"movie_genre_romance" = "Romance";
+"movie_genre_science_fiction" = "Science Fiction";
+"movie_genre_tv_movie" = "TV Movie";
+"movie_genre_thriller" = "Thriller";
+"movie_genre_war" = "War";
+"movie_genre_western" = "Western";
