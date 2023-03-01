@@ -11,8 +11,7 @@ class MoviesView: UIViewController {
     
     private var collectionView: UICollectionView?
     
-    let manager = MovieManager()
-    var movies: [Movie] = []
+    let viewModel = MoviesViewModel()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,29 +34,21 @@ class MoviesView: UIViewController {
         
         guard let collectionView = collectionView else { return }
         
+        viewModel.getMovies(view: collectionView)
+        
         collectionView.register(MovieCell.self, forCellWithReuseIdentifier: MovieCell.identifier)
         
-        let group = DispatchGroup()
-        
-        group.enter()
-        manager.fetchMovies { movies, error in
-            if let movies = movies {
-                self.movies = movies.movies
-            } else {
-                let alert = UIAlertController(title: error?.localizedDescription, message: "", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "alert_ok_button", style: .cancel))
-                self.present(alert, animated: true)
-            }
-            group.leave()
-        }
-        
-        group.notify(queue: .main) {
-            collectionView.dataSource = self
-            collectionView.delegate = self
-        }
+        collectionView.dataSource = self
+        collectionView.delegate = self
         
         view.addSubview(collectionView)
         collectionView.frame = view.bounds
+        
+        if let error = viewModel.error {
+            let alert = UIAlertController(title: error.localizedDescription, message: "", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "alert_ok_button", style: .cancel))
+            self.present(alert, animated: true)
+        }
     }
 }
 
@@ -67,20 +58,21 @@ class MoviesView: UIViewController {
 extension MoviesView: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
-        return movies.count
+        return viewModel.movies.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCell.identifier, for: indexPath) as? MovieCell
 
-        let movie = movies[indexPath.row]
+        let movie = viewModel.movies[indexPath.row]
         cell?.setup(movie: movie)
 
         return cell ?? UICollectionViewCell()
     }
 }
+
+// MARK: UICollectionView Delegate
 
 extension MoviesView: UICollectionViewDelegate {
     
@@ -90,8 +82,8 @@ extension MoviesView: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        let movie = movies[indexPath.row]
-        let detailsView = DetailsView(
+        let movie = viewModel.movies[indexPath.row]
+        lazy var detailsView = DetailsView(
             image: movie.image,
             movieTitle: movie.title,
             movieDescription: movie.description,
